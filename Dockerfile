@@ -1,7 +1,7 @@
 FROM golang:alpine as build
 WORKDIR /app
 COPY . .
-RUN make build
+RUN go build -v -trimpath -ldflags "-s -w" -o fileserver ./
 
 FROM alpine:latest as release
 WORKDIR /app
