@@ -3,7 +3,7 @@ name: image build
 on:
   push:
     tags:
-      - v*
+      - vv*
 
 env:
   REGISTRY: ghcr.io
