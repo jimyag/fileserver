@@ -14,21 +14,44 @@ builds:
       - windows
     goarch:
       - amd64
-      - arm
       - arm64
-    ignore:
-      - goos: windows
-        goarch: arm
     mod_timestamp: "{{ .CommitTimestamp }}"
     flags:
       - -trimpath
-      - -v
     ldflags:
       - -s -w -X main.version={{.Version}} -X main.commit={{.Commit}} -X main.date={{ .CommitDate }} -X main.builtBy=GithubAction
-
-universal_binaries:
-  - replace: false
-
+dockers:
+  - image_templates: ["ghcr.io/jimyag/fileserver:{{ .Version }}"]
+    dockerfile: Dockerfile
+    use: buildx
+    build_flag_templates:
+      - "--pull"
+      - "--label=io.artifacthub.package.readme-url=https://raw.githubusercontent.com/jimyag/fileserver/main/README.md"
+      - '--label=io.artifacthub.package.maintainers=[{"name":"jimyag","email":"git@jimyag.com"}]'
+      - "--label=io.artifacthub.package.license=MIT"
+      - "--label=org.opencontainers.image.description=Deliver Go binaries as fast and easily as possible"
+      - "--label=org.opencontainers.image.created={{.Date}}"
+      - "--label=org.opencontainers.image.name={{.ProjectName}}"
+      - "--label=org.opencontainers.image.revision={{.FullCommit}}"
+      - "--label=org.opencontainers.image.version={{.Version}}"
+      - "--label=org.opencontainers.image.source={{.GitURL}}"
+      - "--platform=linux/amd64"
+  - image_templates: ["ghcr.io/jimyag/fileserver:{{ .Version }}"]
+    dockerfile: Dockerfile
+    use: buildx
+    build_flag_templates:
+      - "--pull"
+      - "--label=io.artifacthub.package.readme-url=https://raw.githubusercontent.com/jimyag/fileserver/main/README.md"
+      - '--label=io.artifacthub.package.maintainers=[{"name":"jimyag","email":"git@jimyag.com"}]'
+      - "--label=io.artifacthub.package.license=MIT"
+      - "--label=org.opencontainers.image.description=Deliver Go binaries as fast and easily as possible"
+      - "--label=org.opencontainers.image.created={{.Date}}"
+      - "--label=org.opencontainers.image.name={{.ProjectName}}"
+      - "--label=org.opencontainers.image.revision={{.FullCommit}}"
+      - "--label=org.opencontainers.image.version={{.Version}}"
+      - "--label=org.opencontainers.image.source={{.GitURL}}"
+      - "--platform=linux/arm64"
+    goarch: arm64
 archives:
   - format_overrides:
       - goos: windows
@@ -36,6 +59,3 @@ archives:
     builds_info:
       group: root
       owner: root
-
-sboms:
-  - artifacts: archive
