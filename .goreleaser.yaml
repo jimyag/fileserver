@@ -21,7 +21,11 @@ builds:
     ldflags:
       - -s -w -X main.version={{.Version}} -X main.commit={{.Commit}} -X main.date={{ .CommitDate }} -X main.builtBy=GithubAction
 dockers:
-  - image_templates: ["ghcr.io/jimyag/fileserver:{{ .Version }}"]
+  - image_templates:
+      [
+        "ghcr.io/jimyag/fileserver:{{ .Version }}",
+        "ghcr.io/jimyag/fileserver:latest",
+      ]
     dockerfile: Dockerfile
     use: buildx
     build_flag_templates:
@@ -36,7 +40,11 @@ dockers:
       - "--label=org.opencontainers.image.version={{.Version}}"
       - "--label=org.opencontainers.image.source={{.GitURL}}"
       - "--platform=linux/amd64"
-  - image_templates: ["ghcr.io/jimyag/fileserver:{{ .Version }}"]
+  - image_templates:
+      [
+        "ghcr.io/jimyag/fileserver:{{ .Version }}",
+        "ghcr.io/jimyag/fileserver:latest",
+      ]
     dockerfile: Dockerfile
     use: buildx
     build_flag_templates:
@@ -53,9 +61,4 @@ dockers:
       - "--platform=linux/arm64"
     goarch: arm64
 archives:
-  - format_overrides:
-      - goos: windows
-        format: zip
-    builds_info:
-      group: root
-      owner: root
+  - format: binary
